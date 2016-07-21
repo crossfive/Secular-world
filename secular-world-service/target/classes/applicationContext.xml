@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-4.0.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx.xsd 
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           "
+    >
+    
+	<!-- 定义数据源的信息 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName">
+	        <value>org.logicalcobwebs.proxool.ProxoolDriver</value>
+	    </property>
+	    <property name="url">
+	        <value>proxool.Pool_test</value>
+	    </property>
+	</bean>
+
+	<!-- Spting的JDBCTemplate配置 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+	    p:dataSource-ref="dataSource">
+	</bean>
+
+	<!-- Hibernate的SessionFactory配置 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+	    p:dataSource-ref="dataSource">
+	    <property name="packagesToScan" >
+			<list>
+				<value>com.crossfive</value>
+			</list> 
+		</property>
+	    <property name="hibernateProperties">
+	        <props>
+	            <!-- 打印sql --> 
+	            <prop key="hibernate.show_sql">false</prop> 
+				<!-- SQL方言，这边设定的是MySQL --> 
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop> 
+				<!-- 开启查询缓存 -->
+        		<prop key="hibernate.cache.use_query_cache">true</prop>
+				 <!-- 使用ehcache二级缓存 --> 
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>  
+				<prop key="javax.persistence.sharedCache.mode">ALL</prop>
+				<prop key="hibernate.generate_statistics">true</prop> 
+				<prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache.xml</prop>
+			<!--	<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>   -->
+	        </props>
+	    </property>
+	</bean>
+	
+	<!-- cacheManager, 指定ehcache.xml的位置 --> 
+  	<bean id="cacheManagerEhcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+   		<property name="configLocation">
+        	<value>classpath:ehcache.xml</value>
+        </property>
+        <!-- 由于hibernate也使用了Ehcache, 保证双方都使用同一个缓存管理器 -->
+        <property name="shared" value="true"/>
+    </bean>
+	
+	<!-- hibernate事务配置 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+	<!-- 事务配置 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="load*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="read*" read-only="true"/>
+            <tx:method name="sync*"/>
+            <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+    
+	<aop:config proxy-target-class="true"> 
+	<aop:advisor advice-ref="txAdvice" pointcut="execution(* com.crossfive.framework.jdbc..*.*(..))" /> 
+	</aop:config>
+	 
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	 
+	<!-- <context:component-scan base-package="dynamicScan" /> -->
+	<context:component-scan base-package="com.crossfive" />
+	<context:annotation-config/>
+	
+	<!-- more bean definitions go here -->
+
+</beans>

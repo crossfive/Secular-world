@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxool-config>
+   <proxool>
+      <alias>Pool_test</alias>
+      <driver-url>jdbc:mysql://localhost:3306/gift?useUnicode=true&amp;characterEncoding=utf-8</driver-url>
+      <driver-class>com.mysql.jdbc.Driver</driver-class>
+      <driver-properties>
+      	<property name="user" value="root"/>
+      	<property name="password" value="1234"/>
+      </driver-properties>
+      <house-keeping-sleep-time>300000</house-keeping-sleep-time>
+      <maximum-connection-count>1000</maximum-connection-count>　
+      <minimum-connection-count>1</minimum-connection-count>
+      <prototype-count>0</prototype-count>
+      <simultaneous-build-throttle>20</simultaneous-build-throttle>
+      <house-keeping-test-sql>select CURRENT_DATE</house-keeping-test-sql>
+      <statistics>15s,10m,1d</statistics>
+      <statistics-log-level>INFO</statistics-log-level>
+   </proxool>
+</proxool-config>

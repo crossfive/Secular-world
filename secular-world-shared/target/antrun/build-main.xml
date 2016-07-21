@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echo message="project home:        /Users/kira/Software/eclipse/workspace2/secular-world/secular-world-shared"/>
+  <echo message="java home:           /Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/jre"/>
+  <echo message="java source version: 1.7"/>
+  <echo message="java target version: 1.7"/>
+  <echo message="java source charset: UTF-8"/>
+</target>
+</project>

@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.crossfive</groupId>
+		<artifactId>origin</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>com.crossfive.secularWorld</groupId>
+	<artifactId>secular-world</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>secular-world-shared</module>
+		<module>secular-world-service</module>
+	</modules>
+	<properties>
+		<origin-shared>0.0.1-SNAPSHOT</origin-shared>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.crossfive</groupId>
+			<artifactId>origin-shared</artifactId>
+			<version>${origin-shared}</version>
+		</dependency>
+	</dependencies>
+</project>

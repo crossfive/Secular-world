@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans        
+	http://www.springframework.org/schema/beans/spring-beans.xsd        
+	http://code.alibabatech.com/schema/dubbo        
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- <dubbo:registry address="zookeeper://127.0.0.1:2181" /> -->
+	<!-- 增加引用远程服务配置 -->
+	<dubbo:application name="secular-world-provider"></dubbo:application>
+	<dubbo:registry address="zookeeper://172.16.196.1:2181" />
+	<dubbo:protocol name="dubbo" port="20880" dispatcher="all" threadpool="fixed" threads="100" />
+	<dubbo:service interface="com.crossfive.secularWorld.user.service.UserService" ref="userServiceImpl"/>
+	<dubbo:service interface="com.crossfive.secularWorld.user.action.UserAction" ref="userActionImpl"/>
+	
+</beans>
